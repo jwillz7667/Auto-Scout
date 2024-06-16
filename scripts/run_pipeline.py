@@ -42,7 +42,7 @@ def run_pipeline():
         else:
             logging.error(f"Error scraping data from {url}")
     except Exception as e:
-        logging.error(f"An error occurred in the pipeline: {e}")
+        logging.error(f"An error occurred in the pipeline: {e}", exc_info=True)
         raise
 
 if __name__ == "__main__":
