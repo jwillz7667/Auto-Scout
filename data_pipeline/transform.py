@@ -5,6 +5,12 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def transform_car_data(car_data):
+    """
+    Transform car data by converting price to float and adding a timestamp.
+
+    :param car_data: Dictionary containing car data.
+    :return: Transformed car data or None if an error occurs.
+    """
     try:
         if 'price' in car_data:
             car_data['price'] = float(car_data['price'].replace('$', '').replace(',', ''))
@@ -18,9 +24,3 @@ def transform_car_data(car_data):
     except (ValueError, KeyError) as e:
         logging.error(f"Error transforming data: {e}")
         return None
-
-# Example usage
-if __name__ == "__main__":
-    raw_data = {'model': 'Camry', 'price': '$24,000'}
-    transformed_data = transform_car_data(raw_data)
-    print(transformed_data)

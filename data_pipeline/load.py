@@ -23,6 +23,9 @@ cars = Table('cars', metadata,
              Column('created_at', TIMESTAMP))
 
 def create_table_if_not_exists():
+    """
+    Create the cars table if it does not exist.
+    """
     if not engine.dialect.has_table(engine, 'cars'):
         metadata.create_all(engine)
         logging.info("Successfully created the cars table")
@@ -30,6 +33,12 @@ def create_table_if_not_exists():
         logging.info("Cars table already exists")
 
 def load_data(engine, data):
+    """
+    Load data into the cars table.
+
+    :param engine: SQLAlchemy engine instance.
+    :param data: Data to be inserted into the table.
+    """
     create_table_if_not_exists()
     with engine.connect() as conn:
         try:
@@ -37,11 +46,3 @@ def load_data(engine, data):
             logging.info("Successfully inserted data into the cars table")
         except SQLAlchemyError as e:
             logging.error(f"Error inserting data: {e}")
-
-# Example usage
-if __name__ == "__main__":
-    sample_data = {
-        'make': 'Toyota', 'model': 'Camry', 'year': 2021, 'price': 24000,
-        'fuel_type': 'Gasoline', 'transmission': 'Automatic', 'features': {}, 'created_at': datetime.now().isoformat()
-    }
-    load_data(engine, sample_data)

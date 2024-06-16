@@ -7,11 +7,20 @@ from .config import config
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class KBBAPI:
+    """
+    Class to interact with the Kelley Blue Book API.
+    """
     BASE_URL = 'https://api.kbb.com'
     API_KEY = config.KBB_API_KEY
 
     @staticmethod
     def get_models(make):
+        """
+        Get models for a given make from the KBB API.
+
+        :param make: Car make (e.g., 'toyota').
+        :return: JSON response with models or None if an error occurs.
+        """
         try:
             endpoint = f'{KBBAPI.BASE_URL}/api/v2/vehicles?make={make}&apikey={KBBAPI.API_KEY}'
             response = requests.get(endpoint)
@@ -24,6 +33,13 @@ class KBBAPI:
 
     @staticmethod
     def get_model_details(make, model):
+        """
+        Get details for a given make and model from the KBB API.
+
+        :param make: Car make (e.g., 'toyota').
+        :param model: Car model (e.g., 'camry').
+        :return: JSON response with model details or None if an error occurs.
+        """
         try:
             endpoint = f'{KBBAPI.BASE_URL}/api/v2/vehicles/{make}/{model}?apikey={KBBAPI.API_KEY}'
             response = requests.get(endpoint)
@@ -35,8 +51,17 @@ class KBBAPI:
             return None
 
 class CarScraper:
+    """
+    Class to scrape car data from a given URL.
+    """
     @staticmethod
     def get_car_data(url):
+        """
+        Get car data from a given URL.
+
+        :param url: URL of the car model page.
+        :return: Dictionary with car model and price or None if an error occurs.
+        """
         try:
             response = requests.get(url)
             response.raise_for_status()  # Ensure we notice bad responses
@@ -51,15 +76,3 @@ class CarScraper:
         except AttributeError as e:
             logging.error(f"Error parsing data from {url}: {e}")
             return None
-
-# Example usage
-if __name__ == "__main__":
-    kbb_api = KBBAPI()
-    models = kbb_api.get_models('toyota')
-    print(models)
-    model_details = kbb_api.get_model_details('toyota', 'camry')
-    print(model_details)
-
-    url = 'https://www.example.com/car-model-page'
-    car_data = CarScraper.get_car_data(url)
-    print(car_data)
